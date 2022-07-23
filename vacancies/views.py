@@ -1,8 +1,6 @@
 import json
-
 from django.http import HttpResponse, JsonResponse
 from django.utils.decorators import method_decorator
-from django.views import View
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import DetailView, ListView, CreateView, UpdateView, DeleteView
 
@@ -29,6 +27,10 @@ class VacancyListView(ListView):
         search_text = request.GET.get('s', None)
         if search_text:
             self.object_list = self.object_list.filter(text=search_text)
+
+        # реализация сортировки, знак "-" это сортировка в обратном порядке
+        # полей для сортировки можно передовать сколько угодно
+        self.object_list = self.object_list.order_by('-text', 'slug')
 
         response = []
         for vacancy in self.object_list:

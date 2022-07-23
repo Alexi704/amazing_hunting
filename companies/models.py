@@ -7,6 +7,9 @@ class Company(models.Model):
     class Meta:
         verbose_name = 'Компания'
         verbose_name_plural = 'Компании'
+        # сортировка через модель рекомендована, если надо сортировать по умолчанию
+        # знак "-" означает сортировку в обратном порядке, полей можно указывать сколько угодно
+        # ordering = ["text", "-slug"]
 
     def __str__(self):
         return self.name
