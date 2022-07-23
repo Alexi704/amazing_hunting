@@ -1,9 +1,12 @@
 import json
+
+from django.core.paginator import Paginator
 from django.http import HttpResponse, JsonResponse
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import DetailView, ListView, CreateView, UpdateView, DeleteView
 
+from amazing_hunting import settings
 from vacancies.models import Vacancy, Skill
 
 
@@ -28,18 +31,32 @@ class VacancyListView(ListView):
         if search_text:
             self.object_list = self.object_list.filter(text=search_text)
 
+
         # реализация сортировки, знак "-" это сортировка в обратном порядке
         # полей для сортировки можно передовать сколько угодно
         self.object_list = self.object_list.order_by('-text', 'slug')
 
-        response = []
-        for vacancy in self.object_list:
-            response.append({'id': vacancy.id,
+
+        # пагинация
+        paginator = Paginator(self.object_list, settings.TOTAL_ON_PAGE)
+        page_number = request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
+
+
+        vacancies = []
+        for vacancy in page_obj:
+            vacancies.append({'id': vacancy.id,
                              'text': vacancy.text,
                              'slug': vacancy.slug,
                              'status': vacancy.status,
                              'created': vacancy.created,
                              'user': vacancy.user_id, })
+
+        response = {
+            'items': vacancies,
+            'num_pages': paginator.num_pages,
+            'total': paginator.count
+        }
         return JsonResponse(response, safe=False, json_dumps_params={"ensure_ascii": False})
 
 
