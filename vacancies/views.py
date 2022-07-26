@@ -34,26 +34,25 @@ class VacancyListView(ListView):
         if search_text:
             self.object_list = self.object_list.filter(text=search_text)
 
-
         # реализация сортировки, знак "-" это сортировка в обратном порядке
         # полей для сортировки можно передовать сколько угодно
-        self.object_list = self.object_list.order_by('-text', 'slug')
-
+        self.object_list = self.object_list.select_related('user').prefetch_related('skills').order_by('text', 'slug')
 
         # пагинация
         paginator = Paginator(self.object_list, settings.TOTAL_ON_PAGE)
         page_number = request.GET.get('page')
         page_obj = paginator.get_page(page_number)
 
-
         vacancies = []
         for vacancy in page_obj:
             vacancies.append({'id': vacancy.id,
-                             'text': vacancy.text,
-                             'slug': vacancy.slug,
-                             'status': vacancy.status,
-                             'created': vacancy.created,
-                             'user': vacancy.user_id, })
+                              'text': vacancy.text,
+                              'slug': vacancy.slug,
+                              'status': vacancy.status,
+                              'created': vacancy.created,
+                              'username': vacancy.user.username,
+                              'skills': list(map(str, vacancy.skills.all())),
+                              })
 
         response = {
             'items': vacancies,
@@ -158,7 +157,7 @@ class UserVacancyDetailView(View):
         page_number = request.GET.get('page')
         page_obj = paginator.get_page(page_number)
 
-        users =[]
+        users = []
         for user in page_obj:
             users.append({
                 'id': user.id,
