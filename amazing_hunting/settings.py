@@ -32,6 +32,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
     'vacancies',
     'companies',
 ]
@@ -121,7 +122,6 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 TOTAL_ON_PAGE = 10
 
-
 # код, позволяющий отслеживать все запросы, в т.ч. в базу данных
 # (настраивает логирование, которое выводится в консоль)
 # LOGGING = {
@@ -144,4 +144,3 @@ TOTAL_ON_PAGE = 10
 #         },
 #     },
 # }
-
