@@ -12,7 +12,7 @@ from django.views.generic import DetailView, ListView, CreateView, UpdateView, D
 
 from amazing_hunting import settings
 from vacancies.models import Vacancy, Skill
-from vacancies.serializer import VacancySerializer
+from vacancies.serializer import VacancySerializer, VacancyDetailSerializer
 
 
 def hello(request):
@@ -72,13 +72,16 @@ class VacancyDetailView(DetailView):
     def get(self, request, *args, **kwargs):
         vacancy = self.get_object()
 
-        response = {'id': vacancy.id,
-                    'text': vacancy.text,
-                    'slug': vacancy.slug,
-                    'status': vacancy.status,
-                    'created': vacancy.created,
-                    'user': vacancy.user_id,
-                    'skills': list(map(str, vacancy.skills.all())),}
+        # response = {'id': vacancy.id,
+        #             'text': vacancy.text,
+        #             'slug': vacancy.slug,
+        #             'status': vacancy.status,
+        #             'created': vacancy.created,
+        #             'user': vacancy.user_id,
+        #             'skills': list(map(str, vacancy.skills.all())),}
+
+        response = VacancyDetailSerializer(vacancy).data
+
         return JsonResponse(response, safe=False, json_dumps_params={"ensure_ascii": False})
 
 
