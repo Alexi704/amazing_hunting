@@ -4,11 +4,12 @@ from django.db.models import Count, Avg
 from django.http import HttpResponse, JsonResponse
 from django.views import View
 from rest_framework.generics import ListAPIView, RetrieveAPIView, CreateAPIView, UpdateAPIView, DestroyAPIView
+from rest_framework.viewsets import ModelViewSet
 
 from amazing_hunting import settings
-from vacancies.models import Vacancy
+from vacancies.models import Vacancy, Skill
 from vacancies.serializer import VacancyListSerializer, VacancyDetailSerializer, VacancyCreateSerializer, \
-    VacancyUpdateSerializer, VacancyDestroySerializer
+    VacancyUpdateSerializer, VacancyDestroySerializer, SkillSerializer
 
 
 def hello(request):
@@ -18,6 +19,10 @@ def hello(request):
                 </div>"""
     return HttpResponse(result)
 
+
+class SkillsViewSet(ModelViewSet):
+    queryset = Skill.objects.all()
+    serializer_class = SkillSerializer
 
 class VacancyListView(ListAPIView):
     queryset = Vacancy.objects.all()
