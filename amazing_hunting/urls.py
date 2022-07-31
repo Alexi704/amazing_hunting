@@ -18,6 +18,7 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
 from rest_framework import routers
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 from vacancies import views
 from vacancies.views import SkillsViewSet
@@ -33,6 +34,8 @@ urlpatterns = [
     path('vacancy/', include('vacancies.urls')),
     path('company/', include('companies.urls')),
     path('user/', include('authentication.urls')),
+    path('token/', TokenObtainPairView.as_view()),
+	path('token/refresh/', TokenRefreshView.as_view()),
 ]
 
 urlpatterns += router.urls
