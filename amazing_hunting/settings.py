@@ -7,6 +7,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 import os.path
+from datetime import timedelta
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -16,7 +17,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-3q)4l521p%p65-asabulc11ct^&_2b$xjprs*8#y^rx9q4&8mw'
+SECRET_KEY = 'SK-d*z6xzZcXuUa6xw5vMEHc275Z%qAp9S@'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -158,3 +159,14 @@ REST_FRAMEWORK = {
 }
 
 AUTH_USER_MODEL = 'authentication.User'
+
+# устанавливаем свое значение время действия токенов:
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=20),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+
+    # задаем алгоритм шифрования
+    # 'ALGORITHM': 'HS256',
+    # переопределяем секретный ключ для шифрования
+    # 'SIGNING_KEY': SECRET_KEY,
+}
