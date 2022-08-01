@@ -61,7 +61,7 @@ class VacancyDetailView(RetrieveAPIView):
 class VacancyCreateView(CreateAPIView):
     queryset = Vacancy.objects.all()
     serializer_class = VacancyCreateSerializer
-    permission_classes = [VacancyCreatePermission]
+    permission_classes = [IsAuthenticated, VacancyCreatePermission]
 
 
 class VacancyUpdateView(UpdateAPIView):
