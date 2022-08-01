@@ -1,4 +1,3 @@
-from django.contrib.auth.models import User
 from django.core.paginator import Paginator
 from django.db.models import Count, Avg, Q, F
 from django.http import HttpResponse, JsonResponse
@@ -8,6 +7,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.viewsets import ModelViewSet
 
 from amazing_hunting import settings
+from authentication.models import User
 from vacancies.models import Vacancy, Skill
 from vacancies.permissions import VacancyCreatePermission
 from vacancies.serializer import VacancyListSerializer, VacancyDetailSerializer, VacancyCreateSerializer, \
@@ -74,7 +74,9 @@ class VacancyDeleteView(DestroyAPIView):
     serializer_class = VacancyDestroySerializer
 
 
-class UserVacancyDetailView(View):
+class UserVacancyDetailView(ListAPIView):
+    permission_classes = [IsAuthenticated]
+
     def get(self, request):
         user_qs = User.objects.annotate(vacancies=Count('vacancy'))
 
@@ -99,6 +101,8 @@ class UserVacancyDetailView(View):
         return JsonResponse(response, safe=False, json_dumps_params={"ensure_ascii": False})
 
 
+
+
 class VacancyLikeView(UpdateAPIView):
     queryset = Vacancy.objects.all()
     serializer_class = VacancyDetailSerializer
@@ -111,5 +115,3 @@ class VacancyLikeView(UpdateAPIView):
             safe=False,
             json_dumps_params={"ensure_ascii": False}
         )
-
-
